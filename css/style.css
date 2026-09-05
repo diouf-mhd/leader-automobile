@@ -97,7 +97,7 @@ h1,h2,h3{font-family:var(--ff-display);margin:0;}
   background-image:repeating-linear-gradient(115deg, rgba(0,0,0,0.015) 0 2px, transparent 2px 60px);
 }
 .hero-vehicles{
-  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.32;
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.55;
 }
 .hero-vehicles::after{
   content:"";position:absolute;inset:0;
@@ -105,7 +105,7 @@ h1,h2,h3{font-family:var(--ff-display);margin:0;}
 }
 .hero-car{
   position:absolute;width:42vw;max-width:560px;height:52vh;max-height:520px;object-fit:cover;
-  border-radius:28px;filter:saturate(.72) contrast(.9);box-shadow:0 25px 70px rgba(0,0,0,.18);
+  border-radius:28px;opacity:1;filter:saturate(.72) contrast(.9);box-shadow:0 25px 70px rgba(0,0,0,.18);
 }
 .hero-car-1{left:-7vw;top:16%;transform:rotate(-5deg);}
 .hero-car-2{left:29%;top:8%;transform:rotate(2deg);}
@@ -343,7 +343,7 @@ h1,h2,h3{font-family:var(--ff-display);margin:0;}
   .hero-content{padding:120px 18px 100px;}
   .hero-title{font-size:clamp(34px,10.5vw,52px);line-height:1.04;}
   .hero-text{font-size:16px;}
-  .hero-car{width:58vw;height:42vh;opacity:.9;}
+  .hero-car{width:58vw;height:42vh;opacity:1;}
   .hero-car-1{left:-28vw;top:23%;}
   .hero-car-2{left:21%;top:13%;}
   .hero-car-3{right:-28vw;top:25%;}

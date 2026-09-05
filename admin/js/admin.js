@@ -24,6 +24,15 @@
 
   const ACCESS_CODE = '2027';
 
+  function esc(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   /*
    * =========================================================
    * ACCÈS ADMIN
