@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leader Automobile | Vente de véhicules au Sénégal</title>
+<meta name="description" content="Leader Automobile — vente de véhicules d'occasion, neufs et en arrivage au Sénégal. Sélection, essai sur rendez-vous, contact direct WhatsApp.">
+<meta property="og:title" content="Leader Automobile | Vente de véhicules au Sénégal">
+<meta property="og:description" content="Trouvez la voiture qui vous correspond. Véhicules d'occasion, neufs et arrivages, sélectionnés par Leader Automobile.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="/img/logo.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Leader Automobile">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#accueil" class="brand">
+      <img src="/img/logo.svg" alt="Leader Automobile" class="brand-logo">
+      <span class="brand-name">LEADER<span class="brand-sub">AUTOMOBILE</span></span>
+    </a>
+    <div class="nav-backdrop" id="navBackdrop"></div>
+    <nav class="nav-links" id="navLinks" aria-label="Navigation principale">
+      <a href="#accueil">Accueil</a>
+      <a href="#vehicules">Véhicules</a>
+      <a href="#arrivages">Arrivages</a>
+      <a href="#rendezvous">Rendez-vous</a>
+      <a href="#apropos">À propos</a>
+      <a href="#contact">Contact</a>
+      <a href="/admin/" class="footer-admin-link">Administration</a>
+    </nav>
+    <button id="installApp" class="btn btn-install btn-sm" hidden>Installer l’app</button>
+    <a href="#" id="navWhatsapp" class="btn btn-whatsapp btn-sm">WhatsApp</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+  <div class="hero-bg"></div>
+  <div class="hero-vehicles" id="heroVehicles" aria-hidden="true"></div>
+  <div class="hero-content reveal">
+    <p class="hero-kicker">Concession premium — Occasion · Neuve · Arrivage</p>
+    <h1 class="hero-title">TROUVEZ LA VOITURE<br>QUI VOUS CORRESPOND</h1>
+    <p class="hero-text">Leader Automobile sélectionne pour vous des véhicules d'occasion, neufs et en arrivage,
+      avec un contact direct et un accompagnement personnalisé jusqu'à l'essai.</p>
+    <div class="hero-actions">
+      <a href="#vehicules" class="btn btn-gold">Voir les véhicules</a>
+      <a href="#rendezvous" class="btn btn-outline">Prendre rendez-vous</a>
+    </div>
+  </div>
+  <a href="#vehicules" class="scroll-cue">
+    <span>Découvrir nos véhicules</span>
+    <span class="scroll-arrow">↓</span>
+  </a>
+</section>
+
+<!-- VEHICULES -->
+<section class="section" id="vehicules">
+  <div class="section-inner">
+    <p class="eyebrow reveal">Notre sélection</p>
+    <h2 class="section-title reveal">Nos véhicules</h2>
+
+    <div class="tabs reveal" id="categoryTabs">
+      <button class="tab active" data-category="">Tous</button>
+      <button class="tab" data-category="occasion">Occasion</button>
+      <button class="tab" data-category="neuve">Neuve</button>
+      <button class="tab" data-category="arrivage">Arrivage</button>
+    </div>
+
+    <div id="vehiclesGrid" class="vehicles-grid">
+      <!-- injected by JS -->
+    </div>
+    <div id="vehiclesEmpty" class="empty-state" hidden>
+      <div class="empty-icon">🚗</div>
+      <h3>Aucun véhicule disponible pour le moment</h3>
+      <p>Leader Automobile met régulièrement à jour ses annonces. Revenez bientôt ou contactez-nous sur WhatsApp.</p>
+      <a href="#contact" class="btn btn-outline">Nous contacter</a>
+    </div>
+  </div>
+</section>
+
+<!-- ARRIVAGES -->
+<section class="section section-dark" id="arrivages">
+  <div class="section-inner">
+    <p class="eyebrow reveal">Nouveautés</p>
+    <h2 class="section-title reveal">Derniers arrivages</h2>
+    <p class="section-lead reveal">Les véhicules fraîchement arrivés chez Leader Automobile, mis à jour automatiquement.</p>
+    <div id="arrivalsGrid" class="vehicles-grid"></div>
+    <div id="arrivalsEmpty" class="empty-state" hidden>
+      <div class="empty-icon">🚚</div>
+      <h3>Aucun arrivage pour le moment</h3>
+      <p>Les prochains véhicules en arrivage seront annoncés ici dès leur enregistrement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RENDEZ-VOUS -->
+<section class="section" id="rendezvous">
+  <div class="section-inner narrow">
+    <p class="eyebrow reveal">Essai véhicule</p>
+    <h2 class="section-title reveal">Tu veux l'essayer ?</h2>
+    <p class="section-lead reveal">Réserve ton rendez-vous et échange directement avec Leader Automobile sur WhatsApp.</p>
+
+    <form id="appointmentForm" class="appointment-form reveal">
+      <div class="form-row">
+        <div class="field">
+          <label for="fullName">Nom complet *</label>
+          <input type="text" id="fullName" name="full_name" required>
+        </div>
+        <div class="field">
+          <label for="phone">Numéro de téléphone *</label>
+          <input type="tel" id="phone" name="phone" placeholder="+221 7X XXX XX XX" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="vehicleWanted">Véhicule souhaité</label>
+          <select id="vehicleWanted" name="vehicle_wanted"></select>
+        </div>
+        <div class="field">
+          <label for="apptType">Type de rendez-vous</label>
+          <select id="apptType" name="appointment_type">
+            <option value="Je me déplace chez Leader Automobile">Je me déplace chez Leader Automobile</option>
+            <option value="Je souhaite que Leader Automobile se déplace">Je souhaite que Leader Automobile se déplace</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="wantedDate">Date souhaitée</label>
+          <input type="date" id="wantedDate" name="wanted_date">
+        </div>
+        <div class="field">
+          <label for="wantedTime">Heure souhaitée</label>
+          <input type="time" id="wantedTime" name="wanted_time">
+        </div>
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="3" placeholder="Précisez votre demande..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-gold btn-block">Réserver et continuer sur WhatsApp</button>
+    </form>
+  </div>
+</section>
+
+<!-- A PROPOS -->
+<section class="section section-dark" id="apropos">
+  <div class="section-inner narrow center">
+    <p class="eyebrow reveal">Qui sommes-nous</p>
+    <h2 class="section-title reveal">À propos de Leader Automobile</h2>
+    <p class="section-lead reveal">
+      Leader Automobile est spécialisé dans la vente de véhicules d'occasion, de véhicules neufs
+      et de véhicules en arrivage. Chaque véhicule est présenté avec des informations claires
+      pour vous permettre de choisir en toute confiance.
+    </p>
+    <div class="about-grid reveal">
+      <div class="about-card">
+        <span class="about-icon">🔍</span>
+        <h3>Sélection des véhicules</h3>
+        <p>Des véhicules présentés avec photos, caractéristiques et prix.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-icon">💬</span>
+        <h3>Contact direct</h3>
+        <p>Échangez immédiatement avec Leader Automobile sur WhatsApp.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-icon">🗓️</span>
+        <h3>Essai sur rendez-vous</h3>
+        <p>Réservez un créneau pour essayer le véhicule qui vous intéresse.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-icon">🤝</span>
+        <h3>Accompagnement personnalisé</h3>
+        <p>Un suivi humain, du premier contact jusqu'à l'essai du véhicule.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="section-inner narrow center">
+    <p class="eyebrow reveal">Contact</p>
+    <h2 class="section-title reveal">Une question sur un véhicule ?</h2>
+    <p class="section-lead reveal">Contacte directement Leader Automobile.</p>
+    <div class="contact-buttons reveal" id="contactButtons"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="/img/logo.svg" alt="Leader Automobile" class="brand-logo">
+      <div>
+        <p class="footer-title">LEADER AUTOMOBILE</p>
+        <p class="footer-tagline">Votre prochaine voiture commence ici.</p>
+      </div>
+    </div>
+    <nav class="footer-links">
+      <a href="#accueil">Accueil</a>
+      <a href="#vehicules">Véhicules</a>
+      <a href="#arrivages">Arrivages</a>
+      <a href="#rendezvous">Rendez-vous</a>
+      <a href="#contact">Contact</a>
+      <a href="/admin/" class="footer-admin-link">Administration</a>
+    </nav>
+    <div class="footer-contacts" id="footerContacts"></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© <span id="year"></span> Leader Automobile. Tous droits réservés.</p>
+    <p>Site développé par Moussa Diouf<br><a href="https://moussadioufportfolio.kesug.com" target="_blank" rel="noopener">Clique ici pour voir son profil</a></p>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp button (mobile-friendly, always accessible) -->
+<a href="#" id="floatingWhatsapp" class="floating-whatsapp" aria-label="Contacter sur WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28" fill="white"><path d="M16 2C8.3 2 2 8.3 2 16c0 2.7.7 5.2 2.1 7.4L2 30l6.8-2.1C11 29.2 13.4 30 16 30c7.7 0 14-6.3 14-14S23.7 2 16 2zm0 25.5c-2.3 0-4.5-.6-6.4-1.8l-.5-.3-4.1 1.3 1.3-4-.3-.5C4.6 20.3 4 18.2 4 16 4 9.4 9.4 4 16 4s12 5.4 12 12-5.4 11.5-12 11.5zm6.4-8.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C13.9 13 13.2 11 13 10.5c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4z"/></svg>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/pwa.js"></script>
+</body>
+</html>

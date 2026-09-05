@@ -1,0 +1,113 @@
+:root{
+  --black:#0a0a0a; --anthracite:#17171a; --anthracite-2:#212124;
+  --gold:#c9a24a; --gold-light:#f5d98b;
+  --white:#f8f7f4; --grey:#9a9a9d;
+  --ff-display:'Playfair Display',serif; --ff-body:'Manrope',sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--ff-body);background:#f4f4f2;color:#1a1a1a;}
+h1,h3{font-family:var(--ff-display);margin:0 0 20px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;font-weight:700;font-size:13px;border:none;cursor:pointer;transition:.2s;}
+.btn-gold{background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#0a0a0a;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(201,162,74,.35);}
+.btn-outline-dark{background:none;border:1px solid #ccc;color:#333;}
+.btn-block{width:100%;}
+
+/* ---------- LOGIN ---------- */
+.login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:#050505;
+}
+.login-card{
+  background:#0b0b0d;padding:44px 36px;border-radius:16px;width:340px;
+  border:1px solid rgba(201,162,74,.2);box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;
+}
+.login-logo{width:56px;margin:0 auto 16px;}
+.login-card h1{color:#fff;font-size:22px;margin-bottom:2px;}
+.login-sub{color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:26px;}
+.login-card .field{text-align:left;margin-bottom:16px;}
+.login-card label{display:block;color:#ccc;font-size:12px;margin-bottom:6px;}
+.login-card input{width:100%;padding:16px 14px;border-radius:10px;border:1px solid rgba(201,162,74,.45);background:#000;color:#fff;font-size:22px;letter-spacing:8px;text-align:center;outline:none;}
+.login-card input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,74,.12);}
+#accessCodeError{text-align:center;}
+.error-msg{color:#ff6b6b;font-size:13px;margin:8px 0;}
+
+/* ---------- APP SHELL ---------- */
+.app-shell{display:flex;min-height:100vh;}
+.sidebar{
+  width:230px;background:var(--black);color:#fff;display:flex;flex-direction:column;padding:22px 14px;
+  position:sticky;top:0;height:100vh;
+}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:0 8px 24px;font-family:var(--ff-display);font-weight:800;font-size:13px;letter-spacing:1px;color:var(--gold);}
+.sidebar-brand img{width:32px;}
+.sidebar-nav{display:flex;flex-direction:column;gap:4px;flex:1;}
+.nav-item{
+  background:none;border:none;color:#ccc;text-align:left;padding:12px 14px;border-radius:10px;font-size:14px;
+  cursor:pointer;transition:.2s;
+}
+.nav-item:hover{background:rgba(255,255,255,0.06);}
+.nav-item.active{background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#0a0a0a;font-weight:700;}
+.nav-item.logout{color:#ff8a8a;margin-top:8px;}
+
+.main-content{flex:1;padding:36px 40px;max-width:1200px;}
+.view{display:none;}
+.view.active{display:block;}
+.view-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+
+/* ---------- STATS ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;}
+.stat-card{background:#fff;border-radius:14px;padding:22px;box-shadow:0 6px 20px rgba(0,0,0,.05);}
+.stat-value{font-family:var(--ff-display);font-size:32px;font-weight:800;color:var(--black);}
+.stat-label{color:#888;font-size:13px;margin-top:4px;}
+
+/* ---------- TABLE ---------- */
+.table-wrap{background:#fff;border-radius:14px;overflow-x:auto;box-shadow:0 6px 20px rgba(0,0,0,.05);}
+.admin-table{width:100%;border-collapse:collapse;min-width:720px;}
+.admin-table th,.admin-table td{padding:14px 16px;text-align:left;font-size:13px;border-bottom:1px solid #f0f0f0;}
+.admin-table th{color:#888;text-transform:uppercase;font-size:11px;letter-spacing:.5px;}
+.admin-table img.thumb{width:56px;height:42px;object-fit:cover;border-radius:6px;}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.row-actions button{border:none;background:#f0f0f0;padding:6px 10px;border-radius:6px;font-size:12px;cursor:pointer;}
+.row-actions button:hover{background:#e2e2e2;}
+.row-actions button.danger{background:#fdeaea;color:#c0392b;}
+.status-pill{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;}
+.status-disponible{background:#e6f7ee;color:#1e8a53;}
+.status-vendu{background:#fdeaea;color:#c0392b;}
+.status-masque{background:#eee;color:#666;}
+.status-nouveau{background:#e8f0fe;color:#1a56c4;}
+.status-contacte{background:#fff4e0;color:#a15c00;}
+.status-confirme{background:#e6f7ee;color:#1e8a53;}
+.status-termine{background:#eee;color:#555;}
+.status-annule{background:#fdeaea;color:#c0392b;}
+
+/* ---------- FORMS ---------- */
+.admin-form{background:#fff;padding:26px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.05);max-width:820px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12px;font-weight:700;color:#444;margin-bottom:6px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:14px;background:#fafafa;
+}
+.form-actions{display:flex;gap:12px;margin-top:10px;}
+.existing-images{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.existing-images .img-item{position:relative;}
+.existing-images img{width:80px;height:60px;object-fit:cover;border-radius:6px;}
+.existing-images .remove-img{
+  position:absolute;top:-6px;right:-6px;background:#c0392b;color:#fff;border:none;border-radius:50%;
+  width:20px;height:20px;font-size:12px;cursor:pointer;
+}
+
+@media(max-width:900px){
+  .app-shell{flex-direction:column;}
+  .sidebar{width:100%;height:auto;flex-direction:row;flex-wrap:wrap;position:static;}
+  .sidebar-brand{padding:6px 8px;}
+  .sidebar-nav{flex-direction:row;flex-wrap:wrap;}
+  .main-content{padding:22px;}
+  .form-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr;}}
+
+/* ---------- ACCESS CODE ---------- */
+#accessGate{position:fixed;inset:0;z-index:9999;}
+#accessGate[hidden]{display:none!important;}
+#loginView[hidden],#appView[hidden]{display:none!important;}

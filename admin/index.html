@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration | Leader Automobile</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a0a0a">
+</head>
+<body>
+
+<!-- ACCESS CODE -->
+<div id="accessGate" class="login-screen">
+  <form id="accessCodeForm" class="login-card">
+    <img src="/img/logo.svg" alt="Leader Automobile" class="login-logo">
+    <h1>Accès sécurisé</h1>
+    <p class="login-sub">Entrez votre code pour continuer</p>
+    <div class="field">
+      <label>Code d'accès</label>
+      <input type="password" id="accessCode" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••" required>
+    </div>
+    <p id="accessCodeError" class="error-msg" hidden>Code incorrect.</p>
+    <button type="submit" class="btn btn-gold btn-block">Continuer</button>
+  </form>
+</div>
+
+<!-- APP VIEW -->
+<div id="appView" class="app-shell" hidden>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="/img/logo.svg" alt="">
+      <span>LEADER<br>AUTOMOBILE</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button data-view="dashboard" class="nav-item active">📊 Dashboard</button>
+      <button data-view="vehicles" class="nav-item">🚗 Véhicules</button>
+      <button data-view="add-vehicle" class="nav-item">➕ Ajouter un véhicule</button>
+      <button data-view="appointments" class="nav-item">🗓️ Rendez-vous</button>
+      <button data-view="settings" class="nav-item">⚙️ Paramètres</button>
+    </nav>
+    <button id="logoutBtn" class="nav-item logout">🚪 Déconnexion</button>
+  </aside>
+
+  <main class="main-content">
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <h1>Dashboard</h1>
+      <div class="stats-grid" id="statsGrid"></div>
+    </section>
+
+    <!-- VEHICLES LIST -->
+    <section id="view-vehicles" class="view">
+      <div class="view-header">
+        <h1>Véhicules</h1>
+        <button class="btn btn-gold" data-view="add-vehicle">+ Ajouter un véhicule</button>
+      </div>
+      <div class="table-wrap">
+        <table class="admin-table" id="vehiclesTable">
+          <thead>
+            <tr><th>Photo</th><th>Nom</th><th>Réf.</th><th>Catégorie</th><th>Prix</th><th>Statut</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ADD / EDIT VEHICLE -->
+    <section id="view-add-vehicle" class="view">
+      <h1 id="vehicleFormTitle">Ajouter un véhicule</h1>
+      <form id="vehicleForm" class="admin-form" enctype="multipart/form-data">
+        <input type="hidden" id="vehicleId">
+        <div class="form-grid">
+          <div class="field"><label>Nom *</label><input type="text" id="vName" required></div>
+          <div class="field"><label>Référence *</label><input type="text" id="vReference" required></div>
+          <div class="field">
+            <label>Catégorie *</label>
+            <select id="vCategory" required>
+              <option value="occasion">Occasion</option>
+              <option value="neuve">Neuve</option>
+              <option value="arrivage">Arrivage</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Statut</label>
+            <select id="vStatus">
+              <option value="disponible">Disponible</option>
+              <option value="vendu">Vendu</option>
+              <option value="masque">Masqué</option>
+            </select>
+          </div>
+          <div class="field"><label>Année</label><input type="number" id="vYear" min="1970" max="2100"></div>
+          <div class="field"><label>Kilométrage</label><input type="number" id="vMileage" min="0"></div>
+          <div class="field"><label>Prix</label><input type="number" id="vPrice" min="0" step="1"></div>
+          <div class="field"><label>Devise</label><input type="text" id="vCurrency" value="FCFA"></div>
+          <div class="field"><label>Carburant</label><input type="text" id="vFuel" placeholder="Essence, Diesel..."></div>
+          <div class="field"><label>Boîte de vitesses</label><input type="text" id="vTransmission" placeholder="Automatique, Manuelle"></div>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="vDescription" rows="4"></textarea>
+        </div>
+        <div class="field">
+          <label>Images (la première devient l'image principale)</label>
+          <input type="file" id="vImages" multiple accept="image/png,image/jpeg,image/webp">
+          <div id="existingImages" class="existing-images"></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-gold">Enregistrer</button>
+          <button type="button" id="cancelVehicleForm" class="btn btn-outline-dark">Annuler</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- APPOINTMENTS -->
+    <section id="view-appointments" class="view">
+      <div class="view-header">
+        <h1>Rendez-vous</h1>
+        <select id="apptStatusFilter">
+          <option value="">Tous les statuts</option>
+          <option value="nouveau">Nouveau</option>
+          <option value="contacte">Contacté</option>
+          <option value="confirme">Confirmé</option>
+          <option value="termine">Terminé</option>
+          <option value="annule">Annulé</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table class="admin-table" id="appointmentsTable">
+          <thead>
+            <tr><th>Nom</th><th>Téléphone</th><th>Véhicule</th><th>Date</th><th>Heure</th><th>Type</th><th>Statut</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="view-settings" class="view">
+      <h1>Paramètres</h1>
+      <form id="passwordForm" class="admin-form" style="max-width:420px;">
+        <h3>Changer le mot de passe</h3>
+        <div class="field"><label>Mot de passe actuel</label><input type="password" id="currentPassword" required></div>
+        <div class="field"><label>Nouveau mot de passe</label><input type="password" id="newPassword" required minlength="6"></div>
+        <p id="passwordMsg" class="error-msg" hidden></p>
+        <button type="submit" class="btn btn-gold">Mettre à jour</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js"></script>
+<script src="/admin/js/admin.js"></script>
+</body>
+</html>
