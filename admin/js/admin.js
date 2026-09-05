@@ -71,7 +71,56 @@
    * l'interface d'administration.
    */
 
-  function unlockAdmin() {
+  async function unlockAdmin() {
+    const email = 'admin@leaderautomobile.com';
+    const password = ACCESS_CODE;
+
+    const { error } =
+      await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if (error) {
+      throw new Error(
+        'Connexion administrateur impossible : ' +
+        error.message
+      );
+    }
+
+    const {
+      data: {
+        user
+      }
+    } = await db.auth.getUser();
+
+    if (!user) {
+      throw new Error(
+        'Session administrateur introuvable.'
+      );
+    }
+
+    const {
+      data: admin,
+      error: adminError
+    } = await db
+      .from('admin_users')
+      .select('id, email')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (adminError) {
+      throw adminError;
+    }
+
+    if (!admin) {
+      await db.auth.signOut();
+
+      throw new Error(
+        "Ce compte n'est pas enregistre comme administrateur."
+      );
+    }
+
     sessionStorage.setItem(
       'leader_admin_access',
       '1'
@@ -80,86 +129,90 @@
     showApp();
   }
 
-  accessCodeForm?.addEventListener(
-    'submit',
-    async function (e) {
-      e.preventDefault();
+ accessCodeForm?.addEventListener(
+  'submit',
+  async e => {
 
-      const input =
-        document.getElementById(
-          'accessCode'
-        );
+    e.preventDefault();
 
-      const error =
-        document.getElementById(
-          'accessCodeError'
-        );
+    const input =
+      document.getElementById(
+        'accessCode'
+      );
 
-      const button =
-        accessCodeForm.querySelector(
-          'button[type="submit"]'
-        );
+    const error =
+      document.getElementById(
+        'accessCodeError'
+      );
 
-      const code =
-        input?.value.trim() || '';
+    const button =
+      accessCodeForm.querySelector(
+        'button[type="submit"]'
+      );
 
-      if (code !== ACCESS_CODE) {
-        if (error) {
-          error.textContent =
-            'Code incorrect.';
-          error.hidden = false;
-        }
+    const code =
+      input.value.trim();
 
-        if (input) {
-          input.value = '';
-          input.focus();
-        }
+    error.hidden = true;
 
-        return;
-      }
+    if (code !== ACCESS_CODE) {
 
-      if (error) {
-        error.hidden = true;
-      }
+      error.textContent =
+        'Code incorrect.';
 
-      if (button) {
-        button.disabled = true;
-        button.textContent =
-          'Chargement...';
-      }
+      error.hidden = false;
 
-      try {
-        unlockAdmin();
+      input.value = '';
+      input.focus();
 
-        await Promise.all([
-          loadDashboard(),
-          loadVehicles(),
-          loadAppointments()
-        ]);
-
-      } catch (err) {
-        console.error(
-          'Erreur administration :',
-          err
-        );
-
-        if (error) {
-          error.textContent =
-            'Impossible de charger les données administrateur.';
-          error.hidden = false;
-        }
-
-        showAccessGate();
-
-      } finally {
-        if (button) {
-          button.disabled = false;
-          button.textContent =
-            'Continuer';
-        }
-      }
+      return;
     }
-  );
+
+    button.disabled = true;
+    button.textContent =
+      'Connexion...';
+
+    try {
+
+      await unlockAdmin();
+
+      await Promise.all([
+        loadDashboard(),
+        loadVehicles()
+      ]);
+
+    } catch (err) {
+
+      console.error(
+        'Erreur admin :',
+        err
+      );
+
+      error.textContent =
+        err.message ||
+        "Impossible d'acceder a l'administration.";
+
+      error.hidden = false;
+
+      await db.auth.signOut();
+
+      sessionStorage.removeItem(
+        'leader_admin_access'
+      );
+
+      accessGate.hidden = false;
+      loginView.hidden = true;
+      appView.hidden = true;
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent =
+          'Continuer';
+
+    }
+  }
+);
 
   /*
    * =========================================================
@@ -1101,4 +1154,73 @@
             year:
               numberOrNull(
                 'vYear'
-              ),
+              )
+          };
+
+          if (id) {
+            const { error } = await db
+              .from('vehicles')
+              .update({
+                ...payload,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', id);
+
+            if (error) {
+              throw error;
+            }
+          } else {
+            const { error } = await db
+              .from('vehicles')
+              .insert(payload);
+
+            if (error) {
+              throw error;
+            }
+          }
+
+          await loadVehicles();
+          await loadDashboard();
+          setView('vehicles');
+
+        } catch (err) {
+          alert(
+            err.message ||
+            "Impossible d'enregistrer le vehicule."
+          );
+        } finally {
+          if (button) {
+            button.disabled = false;
+          }
+        }
+      }
+    );
+
+  /*
+   * =========================================================
+   * INITIALISATION
+   * =========================================================
+   */
+
+  if (hasAccessCode()) {
+    showApp();
+
+    Promise.all([
+      loadDashboard(),
+      loadVehicles()
+    ]).catch(err => {
+      console.error('Erreur de chargement admin :', err);
+      sessionStorage.removeItem('leader_admin_access');
+      db.auth.signOut();
+      showAccessGate();
+    });
+  } else {
+    showAccessGate();
+  }
+
+  function numberOrNull(id) {
+    const value = document.getElementById(id)?.value.trim();
+    return value === '' ? null : Number(value);
+  }
+
+})();
