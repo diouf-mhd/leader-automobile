@@ -33,6 +33,90 @@
       .replace(/'/g, '&#039;');
   }
 
+  async function deleteStorageImages(images) {
+    const paths = (images || [])
+      .map(image => image.storage_path)
+      .filter(Boolean);
+
+    if (!paths.length) {
+      return;
+    }
+
+    const { error } = await db.storage
+      .from(BUCKET)
+      .remove(paths);
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async function normalizeImagePositions(vehicleId) {
+    const { data, error } = await db
+      .from('vehicle_images')
+      .select('id')
+      .eq('vehicle_id', vehicleId)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    for (const [index, image] of (data || []).entries()) {
+      const updateResult = await db
+        .from('vehicle_images')
+        .update({
+          position: index,
+          is_main: index === 0
+        })
+        .eq('id', image.id);
+
+      if (updateResult.error) {
+        throw updateResult.error;
+      }
+    }
+  }
+
+  async function uploadVehicleImages(vehicleId, files) {
+    for (const [index, file] of files.entries()) {
+      const extension = file.name.split('.').pop().toLowerCase();
+      const path = `${vehicleId}/${crypto.randomUUID()}.${extension}`;
+
+      const { error: uploadError } = await db.storage
+        .from(BUCKET)
+        .upload(path, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: publicData } = db.storage
+        .from(BUCKET)
+        .getPublicUrl(path);
+
+      const { error: imageError } = await db
+        .from('vehicle_images')
+        .insert({
+          vehicle_id: vehicleId,
+          storage_path: path,
+          public_url: publicData.publicUrl,
+          position: index,
+          is_main: index === 0
+        });
+
+      if (imageError) {
+        await deleteStorageImages([{ storage_path: path }]);
+        throw imageError;
+      }
+    }
+
+    await normalizeImagePositions(vehicleId);
+  }
+
   /*
    * =========================================================
    * ACCÈS ADMIN
@@ -1163,8 +1247,49 @@
             year:
               numberOrNull(
                 'vYear'
-              )
+              ),
+
+            mileage:
+              numberOrNull(
+                'vMileage'
+              ),
+
+            price:
+              numberOrNull(
+                'vPrice'
+              ),
+
+            currency:
+              document.getElementById(
+                'vCurrency'
+              ).value.trim() || 'FCFA',
+
+            fuel:
+              document.getElementById(
+                'vFuel'
+              ).value.trim() || null,
+
+            transmission:
+              document.getElementById(
+                'vTransmission'
+              ).value.trim() || null,
+
+            description:
+              document.getElementById(
+                'vDescription'
+              ).value.trim() || null
           };
+
+          if (
+            payload.price !== null &&
+            payload.price < 0
+          ) {
+            throw new Error(
+              'Le prix doit etre positif.'
+            );
+          }
+
+          let vehicleId = id;
 
           if (id) {
             const { error } = await db
@@ -1179,13 +1304,25 @@
               throw error;
             }
           } else {
-            const { error } = await db
+            const { data, error } = await db
               .from('vehicles')
-              .insert(payload);
+              .insert(payload)
+              .select('id')
+              .single();
 
             if (error) {
               throw error;
             }
+
+            vehicleId = data.id;
+          }
+
+          const files = Array.from(
+            document.getElementById('vImages')?.files || []
+          );
+
+          if (files.length) {
+            await uploadVehicleImages(vehicleId, files);
           }
 
           await loadVehicles();
@@ -1228,8 +1365,17 @@
   }
 
   function numberOrNull(id) {
-    const value = document.getElementById(id)?.value.trim();
-    return value === '' ? null : Number(value);
+    const input = document.getElementById(id);
+
+    if (!input || input.value === '') {
+      return null;
+    }
+
+    const value = input.valueAsNumber;
+
+    return Number.isFinite(value)
+      ? value
+      : null;
   }
 
 })();
