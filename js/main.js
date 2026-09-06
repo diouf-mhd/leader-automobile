@@ -222,6 +222,7 @@
 Bonjour Leader Automobile,
 je suis intéressé par la ${v.name} (${v.reference}).
 Prix affiché : ${money(v.price, v.currency)}.
+  Photo du véhicule : ${images[0] || 'non disponible'}
 Je souhaite avoir plus d'informations.
 `;
 
@@ -678,17 +679,9 @@ Je souhaite avoir plus d'informations.
           status: 'nouveau'
         };
 
-        const { error } =
-          await db
-            .from('appointments')
-            .insert(payload);
-
-        if (error) {
-          console.error(
-            'Rendez-vous non enregistré :',
-            error
-          );
-        }
+        const vehicleImage =
+          vehicle?.images?.[0] ||
+          'non disponible';
 
         const msg = `
 Bonjour Leader Automobile,
@@ -713,16 +706,36 @@ Type de rendez-vous : ${
           data.appointment_type ||
           'à définir'
         }
+Photo du véhicule : ${vehicleImage}
 Message : ${
           data.message || '-'
         }
 `;
 
-        window.open(
+        const whatsappWindow = window.open(
           waLink(nums[0], msg),
           '_blank',
           'noopener'
         );
+
+        const { error } =
+          await db
+            .from('appointments')
+            .insert(payload);
+
+        if (error) {
+          console.error(
+            'Rendez-vous non enregistré :',
+            error
+          );
+        }
+
+        if (!whatsappWindow) {
+          window.location.href = waLink(
+            nums[0],
+            msg
+          );
+        }
 
         form.reset();
       }
